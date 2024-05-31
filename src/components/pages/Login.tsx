@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import Loader from '../atoms/Loader';
@@ -12,7 +12,7 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (event: { preventDefault: () => void; }) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
     const response = await login(username, password);
@@ -31,6 +31,8 @@ const Login = () => {
     <div className='w-full flex justify-center h-dvh'>
       <div className=' w-full '>
         <div className="w-2/3 mx-auto bg-base-100 p-4 py-8 rounded-3xl">
+          <form onSubmit={handleSubmit}>
+
           <div className='text-center font-extrabold text-3xl mb-8'>
             <h1>Login</h1>
           </div>
@@ -69,7 +71,7 @@ const Login = () => {
                 </div>
             <div className='text-center mb-4'>
               <button
-                onClick={handleSubmit}
+                type='submit'
                 className='btn btn-primary btn-md rounded-badge'
                 disabled={isLoading}
                 >
@@ -79,7 +81,7 @@ const Login = () => {
             <div className='text-center'>
               <p>Don&apos;t have an account? <Link to={'/register'} className='btn btn-sm p-0 btn-link' >Register</Link></p>
             </div>
-
+            </form>
         </div>
       </div>
     </div>

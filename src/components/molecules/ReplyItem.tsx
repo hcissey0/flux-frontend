@@ -1,13 +1,13 @@
-import { Link } from "react-router-dom"
-import { CommentInterface } from "../../interfaces/comment.interfaces"
-import CommentLikeButton from "../atoms/CommentLikeButton"
-import CommentReplyButton from "../atoms/CommentReplyButton"
-import { useState } from "react"
-import Api from "../../utils/api"
-import { useAuth } from "../../hooks/useAuth"
-import ReplyItem from "./ReplyItem"
+import { useState } from 'react'
+import { CommentInterface } from '../../interfaces/comment.interfaces'
+import { Link } from 'react-router-dom'
 
-const CommentMenuItem = ({ comment }: {comment:CommentInterface}) => {
+import CommentLikeButton from '../atoms/CommentLikeButton'
+import CommentReplyButton from '../atoms/CommentReplyButton'
+import { useAuth } from '../../hooks/useAuth'
+import Api from '../../utils/api'
+
+const ReplyItem = ({ comment }: { comment: CommentInterface }) => {
     const { token } = useAuth();
     const [inputOpen, setInputOpen] = useState(true);
     const [repliesNo, setRepliesNo] = useState(comment.replies.length);
@@ -22,42 +22,45 @@ const CommentMenuItem = ({ comment }: {comment:CommentInterface}) => {
             alert(data.error.message);
         } else {
             setReplies(data.replies as CommentInterface[]);
+            // setRepliesNo(repliesNo+1);
         }
     }
 
     const handleReply = async () => {
+        if (!text) return;
         setIsLoading(true);
+
         const data = await Api.replyToComment(token, comment._id, text);
         if (data.error) {
             alert(data.error.message);
         } else {
             replies.push(data.reply as CommentInterface)
-            setReplies(replies);
+            setReplies(replies)
             setRepliesNo(repliesNo+1);
         }
         setText('');
         setIsLoading(false)
 
     }
-    return (
-        <div className="card w-full p-2 bg-base-200 mb-2">
-            <div className="card-body p-0 pb-3">
+  return (
+    <div>
+        <div className="bg-base-100 card-body p-5 m-2 rounded-box">
                 <div className="flex gap-3 items-center">
                     <div>
                         <Link to={`/users/${comment.author._id}`}>
                             <div className="avatar">
-                                <div className="w-6 rounded-full">
+                                <div className="w-5 rounded-full">
                                     <img src="/assets/images/user2.png" />
                                 </div>
                             </div>
                         </Link>
                     </div>
-                    <div className="flex flex-col text-start ">
-                        <p className="text-sm">{comment.author.firstName + " " + comment.author.lastName}</p>
+                    <div className="flex flex-col">
+                        <p className='text-xs font-bold'>{comment.author.firstName + " " + comment.author.lastName}</p>
                         <a href="" className="text-xs">@{comment.author.username}</a>
                     </div>
                 </div>
-              <p className="ml-8 font-bold">{comment.text}</p>
+              <p className=''>{comment.text}</p>
               <div className="card-actions justify-end">
                 <CommentLikeButton comment={comment} />
                 <CommentReplyButton repliesNo={repliesNo} handleReplyClick={handleReplyClick} />
@@ -91,8 +94,9 @@ const CommentMenuItem = ({ comment }: {comment:CommentInterface}) => {
                     </div>
               </div>
             </div>
-        </div>
-    )
+    </div>
+  )
 }
 
-export default CommentMenuItem
+export default ReplyItem
+

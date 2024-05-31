@@ -4,7 +4,7 @@ import { UserInterface } from "./user.interfaces";
 
 interface Error {
     message: string;
-    statusCode?: string;
+    statusCode?: number;
 }
 
 export interface ResponseInterface {
@@ -15,9 +15,12 @@ export interface ResponseInterface {
     posts?: PostInterface[]
     liked?: boolean
     saved?: boolean
+    followed?: boolean
     replied?: boolean
+    reply?: CommentInterface
     comment?: CommentInterface
     comments?: CommentInterface[]
+    replies?: CommentInterface[]
     // chat?: ChatInterface
     // chats?: ChatInterface[]
     // message?: MessageInterface

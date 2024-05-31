@@ -41,16 +41,16 @@ const Home = () => {
       setIsLoading(false);
     }
   return (
-    <div>
-      <div className='flex justify-center mb-4'>
-        <div className="bg-base-100 w-4/5 rounded-full p-4 flex justify-between px-7">
-          <div>
+    <div className='w-full flex flex-col items-center'>
+      <div className='flex w-11/12 justify-center mb-4'>
+        <div className="bg-base-100 w-11/12 rounded-full p-4 flex gap-7 px-7">
+          <div className='flex-1'>
             <input
               type="text"
               name='text'
               value={text}
               placeholder="What's on your mind?"
-              className="input input-bordered w-full rounded-full max-w-xs"
+              className="input input-bordered w-full rounded-full "
               onChange={(e) => setText(e.target.value)}
               />
           </div>
@@ -65,7 +65,7 @@ const Home = () => {
         </div>
       </div>
       {isLoading && <Loader />}
-      <div>
+      <div className='w-full'>
         {posts.length ?
         posts.map((post) => <PostCard key={post._id} post={post} />) :
         (!isLoading && <p className='text-center'> No outstanding posts</p>)}

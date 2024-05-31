@@ -24,6 +24,7 @@ const CommentModal = ({
         async function func() {
             setIsLoading(true);
             const data = await Api.getPostComments(token, post._id);
+
             if (data.error) {
                 alert(data.error.message);
             } else {
@@ -50,48 +51,48 @@ const CommentModal = ({
     }
 
     return (
-        <div className="modal-box h-4/5 ">
+        <div className="p-5 rounded-box bg-base-100 w-full max-w-3xl h-full max-h-[48rem] overflow-auto">
+            <form method="dialog" className="text-end">
+                <button className="btn btn-sm btn-ghost btn-circle text-red-700">x</button>
+            </form>
+            <div className=" h-full flex flex-col justify-between ">
                 <h3 className="font-bold text-lg">Comments on Post</h3>
-            <div className='h-full flex flex-col justify-end'>
-
-
-                <div className='flex flex-col justify-between h-3/4 flex-1 pt-4'>
-                    <div className='overflow-y-auto'>
-                        {isLoading && <Loader />}
-                        {comments.length ?
-                        comments.map((comment) => <div key={comment._id}>
-                            <ul className="menu bg-base-200 ">
-                                <CommentMenuItem comment={comment} />
-                            </ul>
-                        </div>) :
-                        <p className='text-center'>no comments</p>}
-                    </div>
-
-                    <div className='w-full'>
-                        <div className="w-full rounded-full p-4 flex justify-between px-7">
-                            <div>
-                              <input
-                                type="text"
-                                name='text'
-                                value={text}
-                                placeholder="Write a comment..."
-                                className="input input-bordered w-full rounded-full max-w-xs"
-                                onChange={(e) => setText(e.target.value)}
-                                />
-                            </div>
-                            <div>
-                              <button
-                                disabled={isLoading}
-                                className="btn btn-primary btn-md rounded-badge"
-                                onClick={handleCreateComment}
-                                >
-                                  {"Comment"}
-                              </button>
+                <div className='flex flex-col flex-1 justify-end '>
+                    <div className='flex flex-col justify-between flex-1 pt-4 overflow-auto'>
+                        <div className='max-h-[33rem] overflow-auto '>
+                            {isLoading && <Loader />}
+                            {comments.length ?
+                            comments.map((comment) => <div key={comment._id}>
+                                    <CommentMenuItem comment={comment} />
+                                    {/* <div className="divider"></div> */}
+                            </div>) :
+                            <p className='text-center'>no comments</p>}
+                        </div>
+                        <div className='w-full'>
+                            <div className="w-full rounded-full p-4 flex justify-between gap-7 px-7">
+                                <div className="flex-1">
+                                <input
+                                    type="text"
+                                    name='text'
+                                    value={text}
+                                    placeholder="Write a comment..."
+                                    className="input input-bordered w-full rounded-full"
+                                    onChange={(e) => setText(e.target.value)}
+                                    />
+                                </div>
+                                <div>
+                                <button
+                                    disabled={isLoading}
+                                    className="btn btn-primary btn-md rounded-badge"
+                                    onClick={handleCreateComment}
+                                    >
+                                    {"Comment"}
+                                </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div className="modal-action">
                     <form method="dialog">
                     {/* if there is a button in form, it will close the modal */}

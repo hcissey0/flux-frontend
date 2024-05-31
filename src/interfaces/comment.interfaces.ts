@@ -2,7 +2,7 @@ import { UserInterface } from "./user.interfaces";
 
 export interface CommentInterface {
     _id: string
-    author: UserInterface | string
+    author: UserInterface
     text: string
     likes: string[]
     replies: CommentInterface[] | string[]

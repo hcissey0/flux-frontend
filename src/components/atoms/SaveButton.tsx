@@ -17,7 +17,7 @@ const SaveButton = ({ post }: { post: PostInterface }) => {
         setSaves(saves + 1);
       } else {
         setSaved(false);
-        setSaves(saves - 1);
+        setSaves(saves > 0 ? saves - 1: 0);
       }
     }
   return (

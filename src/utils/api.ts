@@ -3,6 +3,14 @@ import { ResponseInterface } from "../interfaces/response.interfaces";
 
 export default class Api {
     static apiUrl = import.meta.env.BACKEND_URL || 'http://localhost:4/api';
+
+    static checkConnected(data: ResponseInterface) {
+        if (data.error) {
+            if (data.error.statusCode === 401) {
+                window.location.href = '/login';
+            }
+        }
+    }
     static async get(url: string): Promise<ResponseInterface> {
         const response = await fetch(url, {
             method: 'GET',
@@ -12,6 +20,7 @@ export default class Api {
             cache: 'default'
         });
         const data = await response.json();
+        Api.checkConnected(data);
         return data;
 
     }
@@ -26,6 +35,7 @@ export default class Api {
                 cache: 'default'
             });
             const data = await response.json();
+            Api.checkConnected(data);
             return data;
         } catch(e) {
             return {
@@ -103,6 +113,7 @@ export default class Api {
                 },
             });
             const data = await response.json();
+            Api.checkConnected(data);
             return data;
         } catch (e) {
             console.log(e)
@@ -128,6 +139,7 @@ export default class Api {
                 })
             });
             const data = await response.json();
+            Api.checkConnected(data);
             return data;
         } catch (e) {
             return {
@@ -147,6 +159,7 @@ export default class Api {
                 }
             });
             const data = await response.json();
+            Api.checkConnected(data);
             return data;
         } catch (e) {
             return {
@@ -166,6 +179,7 @@ export default class Api {
                 }
             });
             const data = await response.json();
+            Api.checkConnected(data);
             return data;
         } catch (e) {
             return {
@@ -189,6 +203,7 @@ export default class Api {
                 })
             });
             const data = await res.json();
+            Api.checkConnected(data);
             return data;
         } catch (e) {
             return {
@@ -208,7 +223,116 @@ export default class Api {
                 }
             });
             const data = await res.json();
+            Api.checkConnected(data);
             return data;
+        } catch (e) {
+            return {
+                error: {
+                    message: (e as Error).message
+                }
+            }
+        }
+    }
+
+    static async likeComment(token:string, commentId:string): Promise<ResponseInterface> {
+        try {
+            const response = await fetch(`${Api.apiUrl}/comments/${commentId}/likes`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+            const data = await response.json();
+            Api.checkConnected(data);
+            return data;
+        } catch (e) {
+            return {
+                error: {
+                    message: (e as Error).message
+                }
+            }
+        }
+    }
+
+    static async replyToComment(token: string, commentId:string, text:string)
+    :Promise<ResponseInterface> {
+        try {
+            const res = await fetch(`${Api.apiUrl}/comments/${commentId}/replies`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    reply: true,
+                    text
+                })
+            });
+            const data = await res.json();
+            Api.checkConnected(data);
+            return data;
+        } catch (e) {
+            return {
+                error: {
+                    message: (e as Error).message
+                }
+            }
+        }
+    }
+
+    static async getCommentReplies(token: string, commentId:string)
+    :Promise<ResponseInterface> {
+        try {
+            const res = await fetch(`${Api.apiUrl}/comments/${commentId}/replies`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+            const data = await res.json();
+            Api.checkConnected(data);
+            return data;
+        } catch (e) {
+            return {
+                error: {
+                    message: (e as Error).message
+                }
+            }
+        }
+    }
+
+    static async getSavedPosts(token:string): Promise<ResponseInterface> {
+        try {
+            const res = await fetch(`${Api.apiUrl}/auth/me/saved`, {
+                method: "GET",
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            const data = await res.json();
+            Api.checkConnected(data);
+            return data;
+        } catch (e) {
+            return {
+                error: {
+                    message: (e as Error).message
+                }
+            }
+        }
+    }
+
+    static async followUser(token:string, userId:string): Promise<ResponseInterface> {
+        try {
+            const res = await fetch(`${Api.apiUrl}/users/${userId}/follow`,{
+                method: 'POST',
+                headers:{
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+            const data = await res.json();
+            Api.checkConnected(data);
+            return data;
+
         } catch (e) {
             return {
                 error: {

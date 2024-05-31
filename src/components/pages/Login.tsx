@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import Loader from '../atoms/Loader';
 
 
 const Login = () => {
@@ -11,7 +12,7 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
     setIsLoading(true);
     const response = await login(username, password);
@@ -23,16 +24,18 @@ const Login = () => {
       navigate('/');
     }
     setIsLoading(false);
+    setUsername('');
+    setPassword('');
   };
   return (
-    <div className='w-full flex justify-center items-center h-dvh'>
+    <div className='w-full flex justify-center h-dvh'>
       <div className=' w-full '>
         <div className="w-2/3 mx-auto bg-base-100 p-4 py-8 rounded-3xl">
           <div className='text-center font-extrabold text-3xl mb-8'>
             <h1>Login</h1>
           </div>
-          <form onSubmit={handleSubmit}>
-            <div className='flex flex-col gap-7 mb-4 md:flex-row justify-center'>
+
+            <div className='flex flex-col gap-7 mb-4 xl:flex-row justify-center'>
               <div>
                 <label className="input input-bordered flex items-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" /></svg>
@@ -58,14 +61,15 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required/>
                 </label>
-                <div className='text-center mt-3'>
-                  {<p className='text-red-500 text-center'>{error}</p>}
-                </div>
               </div>
             </div>
+                <div className='text-center mt-3'>
+                  {isLoading && <Loader />}
+                  {<p className='text-red-500 text-center'>{error}</p>}
+                </div>
             <div className='text-center mb-4'>
               <button
-                type='submit'
+                onClick={handleSubmit}
                 className='btn btn-primary btn-md rounded-badge'
                 disabled={isLoading}
                 >
@@ -75,7 +79,7 @@ const Login = () => {
             <div className='text-center'>
               <p>Don&apos;t have an account? <Link to={'/register'} className='btn btn-sm p-0 btn-link' >Register</Link></p>
             </div>
-          </form>
+
         </div>
       </div>
     </div>

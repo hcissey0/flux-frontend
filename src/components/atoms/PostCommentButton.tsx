@@ -3,7 +3,7 @@ import { PostInterface } from '../../interfaces/post.interfaces'
 import CommentModal from '../molecules/CommentModal';
 
 
-const CommentButton = ({ post }: { post: PostInterface}) => {
+const PostCommentButton = ({ post }: { post: PostInterface}) => {
     const [commentsNo, setCommentsNo] = useState(post.comments.length);
 
   return (
@@ -29,4 +29,4 @@ const CommentButton = ({ post }: { post: PostInterface}) => {
   )
 }
 
-export default CommentButton
+export default PostCommentButton

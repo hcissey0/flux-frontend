@@ -7,11 +7,11 @@ import TimeDisplay from '../atoms/TimeDisplay'
 const PostHead = ({ post }: { post: PostInterface }) => {
   return (
     <div>
-      <div className='flex justify-between'>
+      <div className='flex justify-between w-full'>
         <div className='flex gap-4'>
           <Avatar post={post} />
           <div className='flex items-center text-start'>
-            <TimeDisplay timestamp={post.createdAt as string} />
+            <TimeDisplay timestamp={post.createdAt} />
           </div>
         </div>
         <FollowButton post={post} />

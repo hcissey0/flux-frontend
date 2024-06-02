@@ -7,4 +7,6 @@ export interface CommentInterface {
     likes: string[]
     replies: CommentInterface[] | string[]
     edited: boolean
+    createdAt: string
+    updatedAt: string
 }

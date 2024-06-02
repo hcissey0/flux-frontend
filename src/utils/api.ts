@@ -1,15 +1,18 @@
+
 import { ResponseInterface } from "../interfaces/response.interfaces";
 
 
+
 export default class Api {
-    static apiUrl = import.meta.env.BACKEND_URL || 'http://localhost:4/api';
+    static apiUrl = import.meta.env.VITE_BACKEND_URL || 'http://192.168.50.190/api';
 
     static checkConnected(data: ResponseInterface) {
-        if (data.error) {
-            if (data.error.statusCode === 401) {
-                window.location.href = '/login';
-            }
+        console.log(data)
+        console.log(data.error)
+        if (data.error?.statusCode === 401) {
+            window.location.href = '/login'
         }
+
     }
     static async get(url: string): Promise<ResponseInterface> {
         const response = await fetch(url, {
@@ -333,6 +336,124 @@ export default class Api {
             Api.checkConnected(data);
             return data;
 
+        } catch (e) {
+            return {
+                error: {
+                    message: (e as Error).message
+                }
+            }
+        }
+    }
+
+    static async deletePost(token:string, postId:string)
+    : Promise<ResponseInterface> {
+        try {
+            const res = await fetch(`${Api.apiUrl}/posts/${postId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await res.json();
+            Api.checkConnected(data);
+            return data;
+
+        } catch (e) {
+            return {
+                error: {
+                    message: (e as Error).message
+                }
+            }
+        }
+    }
+
+    static async editPost(token:string, postId:string, text:string)
+    : Promise<ResponseInterface> {
+        try {
+            const res = await fetch(`${Api.apiUrl}/posts/${postId}`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    text
+                })
+            });
+            const data = await res.json();
+            Api.checkConnected(data);
+            return data;
+        } catch (e) {
+            return {
+                error: {
+                    message: (e as Error).message
+                }
+            }
+        }
+    }
+
+    static async getUsers(token:string)
+    : Promise<ResponseInterface> {
+        try {
+            const res = await fetch(`${Api.apiUrl}/users`, {
+                method: "GET",
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await res.json();
+            Api.checkConnected(data);
+            return data;
+        } catch (e) {
+            return {
+                error: {
+                    message: (e as Error).message
+                }
+            }
+        }
+    }
+
+    static async createChat(token:string, participantIds:string[], name:string, isGroup:boolean)
+    : Promise<ResponseInterface> {
+        try {
+            const res = await fetch(`${Api.apiUrl}/chats`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    name,
+                    participantIds,
+                    isGroup
+                })
+            });
+            const data = await res.json();
+            Api.checkConnected(data);
+            console.log(data)
+            return data;
+        } catch (e) {
+            return {
+                error: {
+                    message: (e as Error).message
+                }
+            }
+        }
+    }
+
+    static async getUserChats(token:string)
+    : Promise<ResponseInterface> {
+        try {
+            const res = await fetch(`${Api.apiUrl}/auth/me/chats`,{
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await res.json();
+            Api.checkConnected(data);
+            return data;
         } catch (e) {
             return {
                 error: {

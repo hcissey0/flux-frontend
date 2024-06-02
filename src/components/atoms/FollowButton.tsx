@@ -23,9 +23,9 @@ const FollowButton = ({ post }: { post: PostInterface }) => {
   }
   return (
     <div>
-        {user?._id !== post.author._id && <button
+        {<button
         onClick={handleFollow}
-        role='btn' className={"btn rounded-full " + (followed ? "btn-ghost": "btn-primary")}>
+        role='btn' className={"btn rounded-full " + (followed ? "btn-outline": "btn-primary")}>
           {followers}
         {followed ?
         <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke='currentColor' xmlns="http://www.w3.org/2000/svg">

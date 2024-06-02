@@ -18,22 +18,20 @@ const NavBar = () => {
   }
   return (
 
-      <div className="navbar max-w-screen-md glass fixed rounded-badge mb-5 shadow-2xl">
+      <div className="navbar max-w-screen-md glass fixed rounded-badge mb-5 shadow-2xl z-50">
         <div className="flex-auto">
           <a className="btn btn-ghost rounded-badge text-3xl" href='/'>Flux</a>
         </div>
         <div className="flex-none gap-2 mr-4">
-        <div>
-          <SearchBox />
-        </div>
-          <div className="dropdown dropdown-end">
-            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+          <div>
+            <SearchBox />
+          </div>
+          <details className="dropdown dropdown-end">
+            <summary  className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
-
                 <img src={'/assets/images/user2.png'} alt='avatar'/>
-
               </div>
-            </div>
+            </summary>
             <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
               <li>
                 <Link to={'/profile'} className="justify-between">
@@ -48,7 +46,7 @@ const NavBar = () => {
                 </button>
               </li>
             </ul>
-          </div>
+          </details>
         </div>
       </div>
   )

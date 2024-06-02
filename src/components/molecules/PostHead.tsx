@@ -1,22 +1,18 @@
 import Avatar from '../atoms/Avatar'
-import FollowButton from '../atoms/FollowButton'
 import { PostInterface } from '../../interfaces/post.interfaces'
 import TimeDisplay from '../atoms/TimeDisplay'
 
 
 const PostHead = ({ post }: { post: PostInterface }) => {
   return (
-    <div>
-      <div className='flex justify-between w-full'>
+
         <div className='flex gap-4'>
           <Avatar post={post} />
-          <div className='flex items-center text-start'>
+          <div className='flex items-center text-start text-sm opacity-50'>
             <TimeDisplay timestamp={post.createdAt} />
           </div>
         </div>
-        <FollowButton post={post} />
-      </div>
-    </div>
+
   )
 }
 

@@ -8,8 +8,12 @@ import { useAuth } from './hooks/useAuth';
 import NotFound from './components/pages/NotFound';
 import NavBar from './components/molecules/NavBar';
 import BottomNav from './components/molecules/BottomNav';
-import Logout from './components/pages/Logout';
 import SavedPosts from './components/pages/SavedPosts';
+import Chat from './components/pages/Chat';
+import ChatPage from './components/templates/ChatPage';
+import Logout from './components/pages/Logout';
+import ChatContainer from './components/templates/ChatContainer';
+import ChatApp from './components/templates/ChatApp';
 
 const PrivateRoute = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
@@ -18,6 +22,15 @@ const PrivateRoute = ({ children }: { children: ReactNode }) => {
     return <Navigate to='/login' />;
   }
   return <>{children}</>;
+}
+
+const PublicRoute = ({ children }: { children: ReactNode }) => {
+  const { user } = useAuth();
+
+  if (user) {
+    return <Navigate to={'/'} />;
+  }
+  return <>{children}</>
 }
 
 function App() {
@@ -30,8 +43,20 @@ function App() {
       <div className='pt-24 w-full'>
 
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path='/register' element={<Register />} />
+
+        <Route path='/demo' element={<ChatApp />} />
+
+        {/* <Route path="/login" element={<Logout />} /> */}
+        <Route path="/login" element={
+          // <PublicRoute>
+            <Login />
+          // </PublicRoute>
+        } />
+        <Route path='/register' element={
+          <PublicRoute>
+          <Register />
+        </PublicRoute>
+        } />
         <Route path='/' element={
           <PrivateRoute>
             <Home />
@@ -42,11 +67,12 @@ function App() {
             <SavedPosts />
           </PrivateRoute>
         } />
-        <Route path='/logout' element={
+        <Route path='/chats' element={
           <PrivateRoute>
-            <Logout />
+            <Chat />
           </PrivateRoute>
         } />
+
         {/* <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/feed" element={<Profile />} />

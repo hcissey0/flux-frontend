@@ -23,14 +23,38 @@ const SavedPosts = () => {
         func()
     }, [])
 
+    const deletePost = async (postId:string) => {
+      const data = await Api.deletePost(token, postId);
+      if (data.error) {
+        alert(data.error.message);
+      } else {
+        setPosts(posts.filter((value) => value._id !== postId));
+      }
+    }
+
+    const editPost = async (postId:string, text:string) => {
+      const data = await Api.editPost(token, postId, text);
+      if (data.error) {
+        alert(data.error.message);
+      } else {
+        posts.map((post) => {
+          if (post._id === postId) {
+            post.edited = true;
+            post.text = text;
+          }
+        })
+        setPosts(posts);
+      }
+    }
+
   return (
     <div>
       <h1 className='text-center text-4xl font-bold'>Your Saved Posts</h1>
 
       <div className='mx-auto'>
         {isLoading && <Loader />}
-        {posts.length === 0 && <p className='text-center mt-5'>No saved posts</p>}
-        {posts.map((post) => <PostCard key={post._id} post={post} />)}
+        {!isLoading && posts.length === 0 && <p className='text-center mt-5'>No saved posts</p>}
+        {posts.map((post) => <PostCard key={post._id} deletePost={deletePost} editPost={editPost} post={post} />)}
       </div>
     </div>
   )

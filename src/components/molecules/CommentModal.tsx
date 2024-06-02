@@ -53,7 +53,7 @@ const CommentModal = ({
     return (
         <div className="p-5 rounded-box bg-base-100 w-full max-w-3xl h-full max-h-[48rem] overflow-auto">
             <form method="dialog" className="text-end">
-                <button className="btn btn-sm btn-ghost btn-circle text-red-700">x</button>
+                <button className="btn btn-sm btn-ghost btn-circle hover:text-error">x</button>
             </form>
             <div className=" h-full flex flex-col justify-between ">
                 <h3 className="font-bold text-lg">Comments on Post</h3>
@@ -74,6 +74,7 @@ const CommentModal = ({
                                 <input
                                     type="text"
                                     name='text'
+                                    disabled={isLoading}
                                     value={text}
                                     placeholder="Write a comment..."
                                     className="input input-bordered w-full rounded-full"
@@ -96,7 +97,7 @@ const CommentModal = ({
                 <div className="modal-action">
                     <form method="dialog">
                     {/* if there is a button in form, it will close the modal */}
-                    <button className="btn">Close</button>
+                    <button className="btn rounded-badge hover:text-error">Close</button>
                     </form>
                 </div>
             </div>

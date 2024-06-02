@@ -1,3 +1,4 @@
+import { ChatInterface } from "./chat.interfaces";
 import { CommentInterface } from "./comment.interfaces";
 import { PostInterface } from "./post.interfaces";
 import { UserInterface } from "./user.interfaces";
@@ -11,8 +12,11 @@ export interface ResponseInterface {
     error?: Error
     token?: string
     user?: UserInterface
+    users?: UserInterface[]
     post?: PostInterface
     posts?: PostInterface[]
+    chat?: ChatInterface
+    chats?: ChatInterface[]
     liked?: boolean
     saved?: boolean
     followed?: boolean

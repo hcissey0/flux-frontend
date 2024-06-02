@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { PostInterface } from "../../interfaces/post.interfaces";
 
 interface Props {
@@ -10,23 +11,21 @@ interface Props {
 
 const Avatar = ({
   post,
-    src = '/assets/images/user2.png',
-    alt = 'avatar',
-    height = 50,
-    width = 50
 }: Props) => {
 
 
   return (
     <div className=''>
-      <div className='flex gap-2'>
+      <div className='flex gap-2 items-center'>
       <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-        <div className="w-10 rounded-full">
-
-          <img src={src} height={height} width={width} alt={alt}/>
-
-        </div>
-        </div>
+        <Link to={`/users/${post.author.username}`}>
+          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+            <div className="w-10 rounded-full">
+              <img src={'/assets/images/user2.png'} alt='avatar'/>
+            </div>
+          </div>
+        </Link>
+      </div>
         <div>
             <div className='font-bold text-start p-0 m-0 text-xl'>
                 {post.author.firstName + " " + post.author.lastName}

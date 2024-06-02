@@ -6,6 +6,7 @@ import { useState } from "react"
 import Api from "../../utils/api"
 import { useAuth } from "../../hooks/useAuth"
 import ReplyItem from "./ReplyItem"
+import TimeDisplay from "../atoms/TimeDisplay"
 
 const CommentMenuItem = ({ comment }: {comment:CommentInterface}) => {
     const { token } = useAuth();
@@ -44,7 +45,7 @@ const CommentMenuItem = ({ comment }: {comment:CommentInterface}) => {
             <div className="card-body p-0 pb-3">
                 <div className="flex gap-3 items-center">
                     <div>
-                        <Link to={`/users/${comment.author._id}`}>
+                        <Link to={`/users/${comment.author.username}`}>
                             <div className="avatar">
                                 <div className="w-6 rounded-full">
                                     <img src="/assets/images/user2.png" />
@@ -54,10 +55,14 @@ const CommentMenuItem = ({ comment }: {comment:CommentInterface}) => {
                     </div>
                     <div className="flex flex-col text-start ">
                         <p className="text-sm">{comment.author.firstName + " " + comment.author.lastName}</p>
-                        <a href="" className="text-xs">@{comment.author.username}</a>
+                        <a href={'/users/' + comment.author.username} className="text-xs">@{comment.author.username}</a>
                     </div>
+                    <div className="text-xs opacity-50">
+                        <TimeDisplay timestamp={comment.createdAt}/>
+                    </div>
+
                 </div>
-              <p className="ml-8 font-bold">{comment.text}</p>
+              <p className="mt-4 ml-8 ">{comment.text}</p>
               <div className="card-actions justify-end">
                 <CommentLikeButton comment={comment} />
                 <CommentReplyButton repliesNo={repliesNo} handleReplyClick={handleReplyClick} />

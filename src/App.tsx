@@ -48,9 +48,9 @@ function App() {
 
         {/* <Route path="/login" element={<Logout />} /> */}
         <Route path="/login" element={
-          // <PublicRoute>
+          <PublicRoute>
             <Login />
-          // </PublicRoute>
+           </PublicRoute>
         } />
         <Route path='/register' element={
           <PublicRoute>

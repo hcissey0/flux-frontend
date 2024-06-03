@@ -1,15 +1,15 @@
 
 import { ResponseInterface } from "../interfaces/response.interfaces";
 
-
-
 export default class Api {
     static apiUrl = import.meta.env.VITE_BACKEND_URL || 'http://192.168.50.190/api';
 
     static checkConnected(data: ResponseInterface) {
         console.log(data)
         console.log(data.error)
-        if (data.error?.statusCode === 401) {
+        if (data.error?.statusCode === 401 && data.error.message.includes('Expired')) {
+            localStorage.setItem('user', '');
+            localStorage.setItem('flux-token', '')
             window.location.href = '/login'
         }
 
@@ -430,9 +430,9 @@ export default class Api {
             });
             const data = await res.json();
             Api.checkConnected(data);
-            console.log(data)
             return data;
         } catch (e) {
+            console.error(e)
             return {
                 error: {
                     message: (e as Error).message
@@ -454,6 +454,54 @@ export default class Api {
             const data = await res.json();
             Api.checkConnected(data);
             return data;
+        } catch (e) {
+            return {
+                error: {
+                    message: (e as Error).message
+                }
+            }
+        }
+    }
+
+    static async sendMessage(token:string, chatId:string, text:string)
+    : Promise<ResponseInterface> {
+        try {
+            const res = await fetch(`${Api.apiUrl}/chats/${chatId}/messages`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    text
+                })
+            });
+            const data = await res.json();
+            Api.checkConnected(data);
+            return data;
+        } catch (e) {
+            return {
+                error: {
+                    message: (e as Error).message
+                }
+            }
+        }
+    }
+
+    static async getChatMessages(token:string, chatId:string)
+    : Promise<ResponseInterface> {
+        try {
+            const res = await fetch(`${Api.apiUrl}/chats/${chatId}/messages`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await res.json();
+            Api.checkConnected(data);
+            return data;
+
         } catch (e) {
             return {
                 error: {

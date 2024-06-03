@@ -6,8 +6,8 @@ export interface ChatInterface {
     name: string
     isGroup: boolean
     admins: UserInterface[]
-    participants: string[]
-    messages: string[]
+    participants: UserInterface[]
+    messages: MessageInterface[]
     lastMessage: MessageInterface
     createdAt: string
     updatedAt: string

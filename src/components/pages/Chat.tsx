@@ -26,7 +26,7 @@ const Chat = () => {
   return (
     <div className=' '>
       {/* Open the modal using document.getElementById('ID').showModal() method */}
-      <FAB />
+      <FAB chats={chats} setChats={setChats} />
       <div role="tablist" className="tabs tabs-lifted tabs-lg ">
         <input
           type="radio"

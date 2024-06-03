@@ -3,8 +3,12 @@ import React, { useEffect, useState } from 'react'
 import { useAuth } from '../../hooks/useAuth';
 import { UserInterface } from '../../interfaces/user.interfaces';
 import Api from '../../utils/api';
+import { ChatInterface } from '../../interfaces/chat.interfaces';
 
-const FAB = () => {
+const FAB = ({ chats, setChats }: {
+  chats: ChatInterface[],
+  setChats: (chats: ChatInterface[]) => void
+}) => {
 
   const [users, setUsers] = useState<UserInterface[]>([]);
   const [displayUsers, setDisplayUsers] = useState<UserInterface[]>(users);
@@ -16,18 +20,29 @@ const FAB = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { token, user } = useAuth();
 
-  useEffect(() => {
-    async function func() {
-      const data = await Api.getUsers(token);
+  const handleClick = async () => {
+    document.getElementById('chat_create_modal')?.showModal()
+    const data = await Api.getUsers(token);
       if (data.error) {
         alert(data.error.message);
       } else {
         setUsers(data.users as UserInterface[]);
-        setDisplayUsers(data.users as UserInterface[]);
+        setDisplayUsers((data.users as UserInterface[]).filter((val) => val._id !== user._id));
       }
-    }
-    func()
-  }, [])
+
+  }
+  // useEffect(() => {
+  //   async function func() {
+  //     const data = await Api.getUsers(token);
+  //     if (data.error) {
+  //       alert(data.error.message);
+  //     } else {
+  //       setUsers(data.users as UserInterface[]);
+  //       setDisplayUsers(data.users as UserInterface[]);
+  //     }
+  //   }
+  //   func()
+  // }, [])
 
   useEffect(() => {
     if (!isGroup) {
@@ -67,17 +82,20 @@ const FAB = () => {
           return;
         }
         setIsLoading(true);
-        const participantIds = selectedUsers.map((user) => user._id);
+        const participantIds = selectedUsers.map((val) => val._id);
         const data = await Api.createChat(token, participantIds, name, isGroup);
         if (data.error) {
           alert(data.error.message);
+          console.log('data', data)
         } else {
-            alert('created');
+            alert('Chat created');
+            setChats([...chats, data.chat as ChatInterface]);
             document.getElementById('chat_create_modal')?.close();
         }
         setIsLoading(false);
         setSelectedUsers([]);
         setName('')
+        setIsFull(false);
         setIsGroup(false);
       }
 
@@ -88,7 +106,9 @@ const FAB = () => {
       }
   return (
     <>
-        <button className="z-10 btn btn-circle btn-primary fixed bottom-12 right-0 m-5" onClick={()=>document.getElementById('chat_create_modal')?.showModal()}>
+        <button
+        onClick={handleClick}
+        className="z-10 btn btn-circle btn-primary fixed bottom-12 right-0 m-5">
       <PlusIcon className='size-7' />
       </button>
       <dialog id="chat_create_modal" className="modal modal-middle border">
@@ -106,7 +126,7 @@ const FAB = () => {
                 <input
                 type="checkbox"
                 onClick={() => {setIsGroup(!isGroup); setIsFull(false);}}
-                checked={isGroup}
+                defaultChecked={isGroup}
                 className="checkbox checkbox-primary" />
               </label>
             </div>

@@ -1,4 +1,4 @@
-import { SetStateAction, useEffect, useState } from "react";
+import { SetStateAction, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { PostInterface } from "../../interfaces/post.interfaces"
 import Api from "../../utils/api";
@@ -8,32 +8,24 @@ import CommentMenuItem from "./CommentMenuItem";
 
 const CommentModal = ({
     post,
+    comments,
+    setComments,
+    isLoading,
+    setIsLoading,
     commentsNo,
     setCommentsNo
  }: {
     post: PostInterface,
+    comments: CommentInterface[],
+    setComments: React.Dispatch<SetStateAction<CommentInterface[]>>,
+    isLoading: boolean,
+    setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     commentsNo: number,
     setCommentsNo: React.Dispatch<SetStateAction<number>>,
  }) => {
     const { token } = useAuth();
     const [text, setText] = useState('');
-    const [comments, setComments] = useState<CommentInterface[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        async function func() {
-            setIsLoading(true);
-            const data = await Api.getPostComments(token, post._id);
-
-            if (data.error) {
-                alert(data.error.message);
-            } else {
-                setComments(data.comments as CommentInterface[])
-            }
-            setIsLoading(false);
-        }
-        func()
-    }, []);
 
     const handleCreateComment = async () => {
         setIsLoading(true);

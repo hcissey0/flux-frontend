@@ -1,15 +1,49 @@
 import { useState } from 'react';
 import { PostInterface } from '../../interfaces/post.interfaces'
 import CommentModal from '../molecules/CommentModal';
+import { CommentInterface } from '../../interfaces/comment.interfaces';
+import Api from '../../utils/api';
+import { useAuth } from '../../hooks/useAuth';
 
 
 const PostCommentButton = ({ post }: { post: PostInterface}) => {
     const [commentsNo, setCommentsNo] = useState(post.comments.length);
+    const [comments, setComments] = useState<CommentInterface[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const { token } = useAuth();
 
+    const handleClick = async () => {
+      document.getElementById(`post-${post._id}-modal`)?.showModal()
+      setIsLoading(true);
+
+      const data = await Api.getPostComments(token, post._id);
+
+      if (data.error) {
+          alert(data.error.message);
+      } else {
+          setComments(data.comments as CommentInterface[])
+      }
+      setIsLoading(false);
+    }
+
+    // useEffect(() => {
+    //     async function func() {
+    //         setIsLoading(true);
+    //         const data = await Api.getPostComments(token, post._id);
+
+    //         if (data.error) {
+    //             alert(data.error.message);
+    //         } else {
+    //             setComments(data.comments as CommentInterface[])
+    //         }
+    //         setIsLoading(false);
+    //     }
+    //     func()
+    // }, []);
   return (
     <div>
       <button
-        onClick={()=>document.getElementById(`post-${post._id}-modal`)?.showModal()}
+        onClick={handleClick}
         className="btn btn-sm btn-ghost rounded-full">
           {commentsNo}
           {commentsNo ?
@@ -23,7 +57,14 @@ const PostCommentButton = ({ post }: { post: PostInterface}) => {
           </svg>}
       </button>
       <dialog id={`post-${post._id}-modal`} className="modal modal-bottom sm:modal-middle">
-        <CommentModal post={post} commentsNo={commentsNo} setCommentsNo={setCommentsNo} />
+        <CommentModal
+         post={post}
+         comments={comments}
+         setComments={setComments}
+         isLoading={isLoading}
+         setIsLoading={setIsLoading}
+         commentsNo={commentsNo}
+         setCommentsNo={setCommentsNo} />
       </dialog>
     </div>
   )

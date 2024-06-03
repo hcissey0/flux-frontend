@@ -9,7 +9,7 @@ const ChatTabContent = ({ chats }: { chats: ChatInterface[]}) => {
 
 
   return (
-    <div className="flex w-full flex-col md:flex-row h-auto flex-auto">
+    <div className="flex w-full flex-col md:flex-row h-96 flex-auto">
       <ChatList selectedChat={selectedChat} setSelectedChat={setSelectedChat} chats={chats} />
       <div className="hidden md:divider md:divider-horizontal"></div>
       <ChatWindow selectedChat={selectedChat} setSelectedChat={setSelectedChat} />

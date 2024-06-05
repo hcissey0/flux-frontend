@@ -4,6 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { UserInterface } from '../../interfaces/user.interfaces';
 import Api from '../../utils/api';
 import { ChatInterface } from '../../interfaces/chat.interfaces';
+import Avatar from './Avatar';
 
 const FAB = ({ chats, setChats }: {
   chats: ChatInterface[],
@@ -63,13 +64,14 @@ const FAB = ({ chats, setChats }: {
         }));
       }
 
-      const handleSelect = (user: UserInterface) => {
-          if (!selectedUsers.find((val) => val._id === user._id)) {
-              setSelectedUsers([...selectedUsers, user]);
-            }
-            if (!isGroup && selectedUsers.length <=2 ) {
-                setIsFull(true);
-            }
+      const handleSelect = (selectedUser: UserInterface) => {
+          if (!selectedUsers.find((val) => val._id === selectedUser._id)) {
+            setSelectedUsers([...selectedUsers, selectedUser]);
+            setDisplayUsers(displayUsers.filter((val) => val._id !== selectedUser._id))
+          }
+          if (!isGroup && selectedUsers.length <= 2) {
+            setIsFull(true);
+          }
       }
 
       const handleCreate = async () => {
@@ -99,9 +101,10 @@ const FAB = ({ chats, setChats }: {
         setIsGroup(false);
       }
 
-      const handleRemove = (user: UserInterface) => {
-          setSelectedUsers(selectedUsers.filter((val) => val._id !== user._id))
-          if (selectedUsers.length <= 1) setIsFull(false);
+      const handleRemove = (selectedUser: UserInterface) => {
+        setSelectedUsers(selectedUsers.filter((val) => val._id !== selectedUser._id))
+        setDisplayUsers([...displayUsers, selectedUser])
+        if (selectedUsers.length <= 1) setIsFull(false);
         console.log(selectedUsers)
       }
   return (
@@ -111,9 +114,9 @@ const FAB = ({ chats, setChats }: {
         className="z-10 btn btn-circle btn-primary fixed bottom-12 right-0 m-5">
       <PlusIcon className='size-7' />
       </button>
-      <dialog id="chat_create_modal" className="modal modal-middle border">
+      <dialog id="chat_create_modal" className="modal modal-middle">
         <div className="modal-box">
-              <h3 className='text-2xl font-bold'>Create Chat</h3>
+          <h3 className='text-2xl font-bold'>Create Chat</h3>
           {/* <form method='dialog' className='text-end flex justify-between'>
             <div>
             </div>
@@ -125,11 +128,25 @@ const FAB = ({ chats, setChats }: {
                 <span className="label-text font-bold text-lg">Group Chat:</span>
                 <input
                 type="checkbox"
-                onClick={() => {setIsGroup(!isGroup); setIsFull(false);}}
+                // When
+                // onClick={
+                //   (e) => {
+
+                //     setIsGroup(!isGroup);
+                //     setIsFull(false);
+                //   }
+                // }
+                onChange={
+                  (e) => {
+                    setIsGroup(e.target.checked)
+                    setIsFull(false);
+                  }
+                }
                 defaultChecked={isGroup}
                 className="checkbox checkbox-primary" />
               </label>
             </div>
+            {/*  */}
             <div hidden={!isGroup} className=''>
               <label htmlFor="" className="label cursor-pointer justify-start gap-7">
                 <span className="label-text font-bold text-lg">Group name:</span>
@@ -144,7 +161,6 @@ const FAB = ({ chats, setChats }: {
                 <span className="label-text font-bold text-lg">With:</span>
                 <div className="dropdown dropdown-hover">
                   <div tabIndex={0} role="button" className="">
-                    {searchName}
                     <input type="text"
                       onChange={handleUserSearch}
                       className='input input-bordered input-sm w-2/4 max-w-xs' />
@@ -154,14 +170,10 @@ const FAB = ({ chats, setChats }: {
                       <button
                         onClick={() => handleSelect(user)}
                         className='rounded-badge'>
-                        <div tabIndex={0} className="avatar">
-                          <div className="w-6 rounded-full">
-                            <img src={'/assets/images/user2.png'} alt='avatar'/>
-                          </div>
-                        </div>
-                        {user.firstName + " " + user.lastName}
+                          <Avatar link={false} user={user} w='8' size='md' />
+                          {user.firstName + " " + user.lastName}
                       </button>
-                      </li>) : <li className='text-center'>No Users found</li>}
+                      </li>) : <li className='text-center'>No Users to show</li>}
                   </ul>
                 </div>
               </label>
@@ -173,11 +185,7 @@ const FAB = ({ chats, setChats }: {
                   {selectedUsers.length ? selectedUsers.map((user) => <li key={user._id}>
                     <div className='flex bg-base-300 p-2 rounded-badge gap-5'>
                         <div className='flex items-center gap-2'>
-                            <div tabIndex={0} className="avatar">
-                                <div className="w-6 rounded-full">
-                                <img src={'/assets/images/user2.png'} alt='avatar'/>
-                                </div>
-                            </div>
+                          <Avatar link={false} user={user} w='8' size='md' />
                             {user.firstName + " " + user.lastName}
                         </div>
                         <div>
@@ -188,7 +196,7 @@ const FAB = ({ chats, setChats }: {
                 </ul>
               </div>
             </div>
-            <div className='text-end'>
+            <div className='text-end mt-4'>
               <button
                 disabled={isLoading}
                 onClick={handleCreate}

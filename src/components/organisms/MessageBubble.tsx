@@ -8,7 +8,7 @@ const MessageBubble = ({ message, isGroup }: { message: MessageInterface, isGrou
       <div className={
         "chat " + (message.author._id === user._id ? 'chat-end' : 'chat-start')
       }>
-        <div className="chat-image avatar">
+        <div className={"chat-image avatar placeholder " + (isGroup ? '' : 'hidden')}>
             <div className="w-10 rounded-full">
                 <img alt="Tailwind CSS chat bubble component" src="../../../assets/images/user2.png" />
             </div>

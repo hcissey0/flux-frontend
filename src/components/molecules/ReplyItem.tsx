@@ -6,6 +6,7 @@ import CommentLikeButton from '../atoms/CommentLikeButton'
 import CommentReplyButton from '../atoms/CommentReplyButton'
 import { useAuth } from '../../hooks/useAuth'
 import Api from '../../utils/api'
+import Avatar from '../atoms/Avatar'
 
 const ReplyItem = ({ comment }: { comment: CommentInterface }) => {
     const { token } = useAuth();
@@ -47,13 +48,7 @@ const ReplyItem = ({ comment }: { comment: CommentInterface }) => {
         <div className="bg-base-100 card-body p-5 m-2 rounded-box">
                 <div className="flex gap-3 items-center">
                     <div>
-                        <Link to={`/users/${comment.author._id}`}>
-                            <div className="avatar">
-                                <div className="w-5 rounded-full">
-                                    <img src="/assets/images/user2.png" />
-                                </div>
-                            </div>
-                        </Link>
+                        <Avatar user={comment.author} w="8" size="md" />
                     </div>
                     <div className="flex flex-col">
                         <p className='text-xs font-bold'>{comment.author.firstName + " " + comment.author.lastName}</p>

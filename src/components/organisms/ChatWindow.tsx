@@ -4,6 +4,7 @@ import MessageBubble from './MessageBubble'
 import { useAuth } from '../../hooks/useAuth'
 import Api from '../../utils/api'
 import { MessageInterface } from '../../interfaces/message.interfaces'
+import Loader from '../atoms/Loader'
 
 const ChatWindow = ({ selectedChat, setSelectedChat}: {
     selectedChat: ChatInterface | null,
@@ -52,14 +53,41 @@ const ChatWindow = ({ selectedChat, setSelectedChat}: {
         "p-3 md:flex md:flex-[4] overflow-auto h-auto card bg-base-300 flex-auto rounded-box "
         + (selectedChat ? 'flex' : 'hidden')
     }>
+
       {/* Header */}
-      <div className={'items-center gap-7 bg-base-100 rounded-box ' + (selectedChat? 'flex': 'hidden')}>
-        <button className='btn btn-ghost btn-circle' onClick={()=>setSelectedChat(null)}>
+      <div className={'items-center justify-between bg-base-100 rounded-badge ' + (selectedChat? 'flex': 'hidden')}>
+        <button className='btn btn-ghost rounded-l-badge' onClick={()=>setSelectedChat(null)}>
           {'<'}
         </button>
-        <p>{selectedChat?.name ?
-        selectedChat.name :
-        selectedChat?.participants.find((val) => val._id !== user._id)?.firstName}</p>
+        <div className=' flex-1 text-center '>
+          <p>{selectedChat?.name ?
+          selectedChat.name :
+          selectedChat?.participants.find((val) => val._id !== user._id)?.firstName}</p>
+        </div>
+        <details className={`dropdown dropdown-end ${selectedChat?.isGroup ? '' : 'hidden'}`}>
+          <summary className='btn btn-ghost rounded-r-badge'>
+          {':'}
+          </summary>
+
+            {
+              selectedChat?.admins.find((val) => val._id === user._id) ?
+              <ul className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-40">
+                <li>
+                  <button className='btn btn-ghost rounded-badge btn-sm'>
+                    Add User
+                  </button>
+                </li>
+              </ul>
+            :
+            <ul className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-40">
+                <li>
+                  <button className='btn btn-ghost rounded-badge btn-sm'>
+                    Leave Group
+                  </button>
+                </li>
+              </ul>
+            }
+        </details>
       </div>
 
         {/* Body */}
@@ -68,7 +96,7 @@ const ChatWindow = ({ selectedChat, setSelectedChat}: {
         selectedChat ?
           (
             messages.length ?
-              (<div className='overflow-auto scroll-auto'>
+              (<div className='overflow-auto scroll-auto flex-1'>
                 {messages.map((message) =>
                 <div key={message._id} className=''>
                   <MessageBubble message={message} isGroup={selectedChat.isGroup} />
@@ -76,19 +104,13 @@ const ChatWindow = ({ selectedChat, setSelectedChat}: {
             </div>
               )
                 : <div className='flex-1 flex justify-center items-center'>
-                  No messages
+                  No Messages
                 </div>
           )
                 : (<div className='flex-1 flex justify-center items-center'>
                     <p className='text-lg'>No chat selected</p>
                   </div>)
         }
-
-          {/* Temp Body */}
-      {/* <div className={'border flex-1 overflow-auto ' + (selectedChat? '': 'hidden')}>
-        <MessageBubble message={{ _id: '1', author: { _id: user._id}}}/>
-        <MessageBubble message={{ _id: '1', author: { _id: 'df'}}}/>
-      </div> */}
 
           {/* Footer */}
         <div className={'justify-between gap-4 ' + (selectedChat? 'flex': 'hidden')}>

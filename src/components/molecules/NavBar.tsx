@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import SearchBox from '../atoms/SearchBox'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
+import Avatar from '../atoms/Avatar';
 
 
 
@@ -27,10 +28,11 @@ const NavBar = () => {
             <SearchBox />
           </div>
           <details className="dropdown dropdown-end">
-            <summary  className="btn btn-ghost btn-circle avatar">
-              <div className="w-10 rounded-full">
+            <summary  className="btn btn-ghost btn-circle">
+              <Avatar user={user} link={false} />
+              {/* <div className="w-10 rounded-full">
                 <img src={'/assets/images/user2.png'} alt='avatar'/>
-              </div>
+              </div> */}
             </summary>
             <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
               <li>

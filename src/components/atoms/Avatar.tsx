@@ -1,41 +1,58 @@
 import { Link } from "react-router-dom";
-import { PostInterface } from "../../interfaces/post.interfaces";
+import { UserInterface } from "../../interfaces/user.interfaces";
 
 interface Props {
-    post: PostInterface
-    src?: string;
-    alt?: string;
-    height?: number;
-    width?: number;
+  user: UserInterface | null | undefined
+  src?: string;
+  alt?: string;
+  w?: string;
+  size?: string;
+  status?: string;
+  link?: boolean
 }
 
 const Avatar = ({
-  post,
+  user = null,
+  status = '',
+  w = '10',
+  size = 'xl',
+  link = true,
 }: Props) => {
 
-
-  return (
-    <div className=''>
-      <div className='flex gap-2 items-center'>
-      <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-        <Link to={`/users/${post.author.username}`}>
-          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-            <div className="w-10 rounded-full">
-              <img src={'/assets/images/user2.png'} alt='avatar'/>
-            </div>
-          </div>
-        </Link>
-      </div>
-        <div>
-            <div className='font-bold text-start p-0 m-0 text-xl'>
-                {post.author.firstName + " " + post.author.lastName}
-            </div>
-            <div role='btn' className='btn btn-xs btn-link p-0  text-start text-sm text-neutral-400'>
-                @{post.author.username}
-            </div>
+  if (!link) {
+    return (
+      <div className={`avatar placeholder ${status && status}`}>
+        <div className={`bg-neutral text-neutral-content rounded-full w-${w ? w : '10'}`}>
+          <span className={`text-${size ? size : 'xl'}`}>
+            {
+              user ?
+              user.firstName.charAt(0) + user.lastName.charAt(0)
+              :
+              '$'
+            }
+          </span>
+          {/* <img src={src} alt={alt}/> */}
         </div>
       </div>
-    </div>
+    )
+  }
+
+  return (
+    <Link to={`/users/${user && user.username}`}>
+      <div className={`avatar placeholder ${status && status}`}>
+        <div className={`bg-neutral text-neutral-content rounded-full w-${w}`}>
+          <span className={`text-${size}`}>
+            {
+              user ?
+              user.firstName.charAt(0) + user.lastName.charAt(0)
+              :
+              '$'
+            }
+          </span>
+          {/* <img src={src} alt={alt}/> */}
+        </div>
+      </div>
+    </Link>
   )
 }
 

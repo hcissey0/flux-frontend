@@ -7,6 +7,7 @@ import Api from "../../utils/api"
 import { useAuth } from "../../hooks/useAuth"
 import ReplyItem from "./ReplyItem"
 import TimeDisplay from "../atoms/TimeDisplay"
+import Avatar from "../atoms/Avatar"
 
 const CommentMenuItem = ({ comment }: {comment:CommentInterface}) => {
     const { token } = useAuth();
@@ -45,13 +46,7 @@ const CommentMenuItem = ({ comment }: {comment:CommentInterface}) => {
             <div className="card-body p-0 pb-3">
                 <div className="flex gap-3 items-center">
                     <div>
-                        <Link to={`/users/${comment.author.username}`}>
-                            <div className="avatar">
-                                <div className="w-6 rounded-full">
-                                    <img src="/assets/images/user2.png" />
-                                </div>
-                            </div>
-                        </Link>
+                        <Avatar user={comment.author} w="8" size="md" />
                     </div>
                     <div className="flex flex-col text-start ">
                         <p className="text-sm">{comment.author.firstName + " " + comment.author.lastName}</p>
